@@ -118,7 +118,8 @@ def _yield_classifier_checks(name, Classifier):
     # basic consistency testing
     yield check_classifiers_train
     yield check_classifiers_regression_target
-    if (name not in ["MultinomialNB", "LabelPropagation", "LabelSpreading"]
+    if (name not in ["MultinomialNB", "PoissonNB",
+                     "LabelPropagation", "LabelSpreading"]
         # TODO some complication with -1 label
             and name not in ["DecisionTreeClassifier",
                              "ExtraTreeClassifier"]):
@@ -958,6 +959,8 @@ def check_classifiers_train(name, Classifier):
             classifier = Classifier()
         if name in ['BernoulliNB', 'MultinomialNB']:
             X -= X.min()
+        if name in ['PoissonNB']:
+            X = np.floor((10 * X) ** 2)  # Forces positive integers
         set_testing_parameters(classifier)
         set_random_state(classifier)
         # raises error on malformed input for fit
@@ -971,7 +974,7 @@ def check_classifiers_train(name, Classifier):
         y_pred = classifier.predict(X)
         assert_equal(y_pred.shape, (n_samples,))
         # training set performance
-        if name not in ['BernoulliNB', 'MultinomialNB']:
+        if name not in ['BernoulliNB', 'MultinomialNB', 'PoissonNB']:
             assert_greater(accuracy_score(y, y_pred), 0.83)
 
         # raises error on malformed input for predict
