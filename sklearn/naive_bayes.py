@@ -389,7 +389,7 @@ class GaussianNB(BaseNB):
         X = check_array(X)
 
         joint_log_likelihood = np.zeros((np.shape(X)[0],
-                                         np.size(self.classes_)))
+                                         len(self.classes_)))
         for i in range(len(self.classes_)):
             jointi = np.log(self.class_prior_[i])
             n_ij = - 0.5 * np.sum(np.log(2. * np.pi * self.sigma_[i, :]))
@@ -478,7 +478,7 @@ class PoissonNB(BaseNB):
         PoissonNB._check_non_negative(X)
 
         joint_log_likelihood = np.zeros((np.shape(X)[0],
-                                         np.size(self.classes_)))
+                                         len(self.classes_)))
 
         for i in range(len(self.classes_)):
             jointi = np.log(self.class_prior_[i])
